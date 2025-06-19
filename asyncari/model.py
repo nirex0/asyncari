@@ -836,10 +836,14 @@ async def promote(client, resp, operation_json):
     if res == "":
         log.debug("resp=%s (empty)", resp)
         return None
+    response_class = operation_json['responseClass']
+    if response_class == "void":
+        return None
+    if response_class == "binary":
+        return resp.content
     resp_json = json.loads(res)
     log.debug("resp=%s", resp_json)
 
-    response_class = operation_json['responseClass']
     is_list = False
     m = re.match('''List\[(.*)\]''', response_class)
     if m:
